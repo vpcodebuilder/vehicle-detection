@@ -49,7 +49,9 @@ To exit program use Esc key.
 ## Output
 
 Find object by feature extraction.
+
 <img src="https://drive.google.com/uc?export=view&id=1TzMkGyR2Sjg0TvVRMfHvb2U5uFAdmvMc">
 
 Detection zone and output.
+
 <img src="https://drive.google.com/uc?export=view&id=1Qo4yzLka5X-1M5Z_95owcKySX7U5R8IF">
