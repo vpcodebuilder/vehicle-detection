@@ -31,12 +31,25 @@ string videoFilename = <videoPathFilename>;
 var engine = new Engine(videoFilename);
 ```
 
-To run the engine use the Run() method.
+To run the engine use the Run() method and set the vehicle detection object class.
 
 ```C#
-engine.Run();
+// Detect in full frame.
+engine.Run(new TrafficVehicleDetection());
+
+// If you want to spec in zone detection. It can be set to scale rectangle zone in 0.0-1.0 value.
+// In this example we have to scale for rectangle detection in bottom half frame.
+engine.Run(new TrafficVehicleDetection() {
+    DetectionScale = new System.Drawing.RectangleF(0.0f, 0.5f, 1.0f, 0.5f)
+});
 ```
 
 To exit program use Esc key.
 
 ## Output
+
+Find object by feature extraction.
+<img src="https://drive.google.com/uc?export=view&id=1TzMkGyR2Sjg0TvVRMfHvb2U5uFAdmvMc">
+
+Detection zone and output.
+<img src="https://drive.google.com/uc?export=view&id=1Qo4yzLka5X-1M5Z_95owcKySX7U5R8IF">
