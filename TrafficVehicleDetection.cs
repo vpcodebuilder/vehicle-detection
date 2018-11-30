@@ -10,6 +10,8 @@ namespace VehicleDetection
     public class TrafficVehicleDetection
     {
         public Mat OutputFrame;
+        public RectangleF DetectionScale = RectangleF.Empty;
+        public Rectangle DetectionZone = Rectangle.Empty;
         private readonly BackgroundSubtractorCNT cnt;
 
         public TrafficVehicleDetection()
@@ -19,11 +21,6 @@ namespace VehicleDetection
         }
 
         public Rectangle[] Detect(Mat inputFrame)
-        {
-            return Detect(inputFrame, new Rectangle(0, 0, inputFrame.Width, inputFrame.Height));
-        }
-
-        public Rectangle[] Detect(Mat inputFrame, Rectangle detectionZone)
         {
             // Convert BGR from originalFrame to grayscale outputFrame.
             CvInvoke.CvtColor(inputFrame, OutputFrame, ColorConversion.Bgr2Gray);
@@ -65,9 +62,27 @@ namespace VehicleDetection
                         Rectangle rect = CvInvoke.BoundingRectangle(approxContour);
 
                         // now the contour have in range of detection zone?
-                        if (detectionZone.Contains(rect))
+                        if (DetectionScale == Rectangle.Empty)
                         {
                             rects.Add(rect);
+                        }
+                        else
+                        {
+                            if (DetectionZone == Rectangle.Empty)
+                            {
+                                RectangleF rectDetect = new RectangleF(
+                                    inputFrame.Width * DetectionScale.X,
+                                    inputFrame.Height * DetectionScale.Y,
+                                    inputFrame.Width * DetectionScale.Width,
+                                    inputFrame.Height * DetectionScale.Height);
+
+                                DetectionZone = new Rectangle((int)rectDetect.X, (int)rectDetect.Y, (int)rectDetect.Width, (int)rectDetect.Height);
+                            }
+
+                            if (DetectionZone.Contains(rect))
+                            {
+                                rects.Add(rect);
+                            }
                         }
                     }
                 }

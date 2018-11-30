@@ -65,13 +65,13 @@ namespace VehicleDetection
             isCameraMode = false;
         }
 
-        public void Run()
+        public void Run(TrafficVehicleDetection trafficVehicleDetection)
         {
+            this.trafficVehicleDetection = trafficVehicleDetection;
+
             CvInvoke.NamedWindow(RESULT_WINDOW_NAME);
             CvInvoke.NamedWindow(OUTPUT_WINDOW_NAME);
             
-            trafficVehicleDetection = new TrafficVehicleDetection();
-
             // Create the inputFrame.
             inputFrame = new Mat();
             capture.Start();
@@ -94,7 +94,7 @@ namespace VehicleDetection
                 break;
             }
         }
-                        
+        
         private void ProcessFrame(object sender, EventArgs e)
         {
             capture.Retrieve(inputFrame);
@@ -120,12 +120,9 @@ namespace VehicleDetection
 
             // Clone the inputFrame to resultFrame.
             Mat resultFrame = inputFrame.Clone();
-
-            // Create the detection zone in rectangle of frame.
-            Rectangle detectionZone = new Rectangle(0, inputFrame.Height / 2, inputFrame.Width, inputFrame.Height / 2);
-
+            
             // Algorithms for vehicle detection.
-            Rectangle[] rects = trafficVehicleDetection.Detect(inputFrame, detectionZone);
+            Rectangle[] rects = trafficVehicleDetection.Detect(inputFrame);
             
             // Draw title bar.
             CvInvoke.Rectangle(trafficVehicleDetection.OutputFrame, new Rectangle(0, 0, trafficVehicleDetection.OutputFrame.Width, 20), whiteColor, -1);
@@ -150,9 +147,12 @@ namespace VehicleDetection
                     fontColor);
             }
             
-            // Draw detection zone.
-            CvInvoke.Rectangle(resultFrame, detectionZone, blueColor, 2);
-
+            if (trafficVehicleDetection.DetectionZone != Rectangle.Empty)
+            {
+                // Draw detection zone.
+                CvInvoke.Rectangle(resultFrame, trafficVehicleDetection.DetectionZone, blueColor, 2);
+            }
+            
             // Draw center point of each rectangle.
             foreach (Rectangle rect in rects)
             {
