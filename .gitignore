@@ -1,0 +1,20 @@
+# Build output
+[Bb]in/
+[Oo]bj/
+
+# Visual Studio / Rider
+.vs/
+.idea/
+*.user
+*.suo
+
+# NuGet (packages are restored from nuget.org via PackageReference)
+packages/
+*.nupkg
+
+# Runtime output of the app
+snapshots/
+
+# Neural network weights are fetched by the user, see the README. They are large and
+# the Ultralytics models carry AGPL-3.0, which does not belong in this repository.
+VehicleDetection/models/*.onnx
