@@ -15,6 +15,8 @@ packages/
 # Runtime output of the app
 snapshots/
 
-# Neural network weights are fetched by the user, see the README. They are large and
-# the Ultralytics models carry AGPL-3.0, which does not belong in this repository.
+# Neural network weights. yolov10n.onnx is committed so the project runs out of the
+# box; it carries its own licence, see VehicleDetection/models/README.md. Any other
+# model a user downloads stays out of the repository.
 VehicleDetection/models/*.onnx
+!VehicleDetection/models/yolov10n.onnx

@@ -9,7 +9,7 @@ interface, and both feed the same tracker, counter and display:
 
 | | Background subtraction | YOLO |
 |---|---|---|
-| Needs a model file | no | yes, an `.onnx` |
+| Needs a model file | no | yes, bundled in `models/` |
 | Sees a vehicle that is not moving | no | yes |
 | Speed on the bundled clip (960 px) | 5 ms/frame | 70 ms/frame on a 12 core CPU |
 | Tells a car from a bus | no | yes |
@@ -42,7 +42,7 @@ Both then share:
 
 * .NET SDK 8.0 or newer (Visual Studio 2022 or `dotnet` on the command line).
 * NuGet packages `Emgu.CV` 4.8.1.5350 and `Microsoft.ML.OnnxRuntime` 1.15.0, restored automatically.
-* For the YOLO detector, one `.onnx` model in `VehicleDetection/models`. See below.
+* Nothing else. The YOLO model ships with the repository; see the licence note below.
 
 ## Running
 
@@ -78,20 +78,20 @@ Usage: VehicleDetection [options]
 Keys while it runs: `Esc`/`Q` quit, `Space` pause, `R` restart, `S` save a snapshot to
 `snapshots/` next to the executable.
 
-## Getting a YOLO model
+## The YOLO model
 
-No model is committed to this repository: the weights are large, and the Ultralytics family is
-licensed under AGPL-3.0, which would reach into any project that ships them. Fetch one yourself
-into `VehicleDetection/models`, for example:
+`VehicleDetection/models/yolov10n.onnx` ships with the repository, so the YOLO detector works
+straight after a clone. It comes from
+[onnx-community/yolov10n](https://huggingface.co/onnx-community/yolov10n).
 
-```
-curl -L -o VehicleDetection/models/yolov10n.onnx \
-  https://huggingface.co/onnx-community/yolov10n/resolve/main/onnx/model.onnx
-```
+> **The model carries its own licence.** It is **AGPL-3.0**, like the rest of the Ultralytics
+> family (YOLOv5, v8, v10, YOLO11). The MIT licence in the root of this repository covers the
+> source code only. AGPL-3.0 suits a public, educational project like this one, because the source
+> is available to everyone the program reaches. If you build something closed source on top of it,
+> replace the model: YOLOX is Apache-2.0, and Ultralytics sell a commercial licence.
 
-**Check the licence of whatever model you pick against how you intend to ship the program.**
-YOLOv5, v8, v10 and YOLO11 are AGPL-3.0. If that does not suit you, models such as YOLOX are
-Apache-2.0 (their export needs its own decoding step, which this code does not implement yet).
+To use a different model, drop its `.onnx` into `VehicleDetection/models` and point `--model` at
+it. Anything other than the bundled file is ignored by git.
 
 `YoloVehicleDetection` reads the tensor shape and adapts to three common export layouts, so most
 COCO trained exports work without a code change:
@@ -199,7 +199,8 @@ detector has no such intermediate image, so that window stays closed.
 ## Version 2.1
 
 * A YOLO detector through ONNX Runtime, selectable with `--detector`, alongside the original
-  background subtraction. Both sit behind `IVehicleDetector`.
+  background subtraction. Both sit behind `IVehicleDetector`. YOLOv10n ships in
+  `VehicleDetection/models` under its own AGPL-3.0 licence.
 * `--detect-every`, so a detector slower than the source frame rate can still run in real time.
 
 ## Version 2.0
